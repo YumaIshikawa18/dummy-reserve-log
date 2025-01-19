@@ -13,4 +13,5 @@ public interface FacilityRepository {
     Facilities save(Facilities facilities);
 
     List<Facilities> findAll();
+
 }

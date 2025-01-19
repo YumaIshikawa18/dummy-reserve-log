@@ -13,4 +13,5 @@ public interface RentalRepository {
     Rentals save(Rentals rentals);
 
     List<Rentals> findAll();
+
 }

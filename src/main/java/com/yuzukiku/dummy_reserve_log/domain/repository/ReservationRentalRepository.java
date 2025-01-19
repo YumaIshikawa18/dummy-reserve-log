@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ReservationRentalRepository {
+
     List<ReservationRentals> findByReservationId(UUID reservationId);
+
     ReservationRentals save(ReservationRentals reservationRentals);
+
 }

@@ -9,4 +9,8 @@ import java.util.UUID;
 
 public interface CampRentalRepository {
     List<CampRentals> findByCampId(UUID campId);
+
+    List<CampRentals> findAll();
+
+    CampRentals save(CampRentals campRentals);
 }

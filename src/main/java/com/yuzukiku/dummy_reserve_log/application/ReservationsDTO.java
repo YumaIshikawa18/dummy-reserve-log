@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -90,26 +88,29 @@ public class ReservationsDTO {
         customerDto.setAddress(customers.getAddress());
         reservationsDTO.setCustomer(customerDto);
 
-        List<RentalDto> rentalsDto = new ArrayList<>();
         long days = ChronoUnit.DAYS.between(reservations.getCheckInDate(), reservations.getCheckOutDate());
         if (days == 0) days = 1;
 
+        // ランダムに選択されたレンタル品が重複する可能性を防ぐため
+        Map<UUID, RentalDto> rentalsDtoMap = new HashMap<>();
         for (int i = 0; i < rentals.size() ; i++) {
             Rentals rental = rentals.get(i);
             int quantity = i < quantities.size() ? quantities.get(i) : 1;
 
-            RentalDto rentalDto = new RentalDto();
+            RentalDto rentalDto = rentalsDtoMap.getOrDefault(rental.getRentalId(), new RentalDto());
             rentalDto.setId(rental.getRentalId());
             rentalDto.setName(rental.getName());
             rentalDto.setUnitPrice(
                     rental.getPricePerDay() != null
                             ? rental.getPricePerDay()
                             : 0);
-            rentalDto.setQuantity(quantity);
-            rentalDto.setSubtotal(rentalDto.getUnitPrice() * quantity * (int) days);
-            rentalsDto.add(rentalDto);
+            rentalDto.setQuantity(rentalDto.getQuantity() + quantity);
+            int currentSubtotal = rentalDto.getSubtotal();
+            rentalDto.setSubtotal(currentSubtotal + rentalDto.getUnitPrice() * quantity * (int) days);
+
+            rentalsDtoMap.put(rental.getRentalId(), rentalDto);
         }
-        reservationsDTO.setRentals(rentalsDto);
+        reservationsDTO.setRentals(new ArrayList<>(rentalsDtoMap.values()));
 
         reservationsDTO.setTotal(totalPrice);
         reservationsDTO.setGivenPoint(totalPrice/100);
