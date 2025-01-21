@@ -1,1 +1,28 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    template:
+      default-topic: reservations-log
 
+  datasource:
+    url: jdbc:postgresql://postgres:5432/reservations-log
+    username: postgres
+
+  sql:
+    init:
+      mode: always
+      platform: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  main:
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    org.springframework.kafka: debug
