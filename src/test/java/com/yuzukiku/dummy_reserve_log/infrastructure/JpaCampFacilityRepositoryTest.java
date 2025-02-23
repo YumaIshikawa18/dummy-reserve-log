@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
@@ -21,17 +20,12 @@ import java.util.UUID;
 @Testcontainers
 public class JpaCampFacilityRepositoryTest {
 
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest");
+
     @Autowired
     private JpaCampFacilityRepository repository;
-
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        @ServiceConnection
-        PostgreSQLContainer<?> postgresContainer() {
-            return new PostgreSQLContainer<>("postgres:latest");
-        }
-    }
 
     @Test
     public void givenValidCampFacility_whenSaved_thenCanBeFound() {
@@ -78,11 +72,11 @@ public class JpaCampFacilityRepositoryTest {
         Assertions.assertThat(campFacilitiesList)
                 .anyMatch(cf ->
                         cf.getCampId().equals(campId)
-                        && cf.getFacilityId().equals(facilityId1));
+                                && cf.getFacilityId().equals(facilityId1));
         Assertions.assertThat(campFacilitiesList)
                 .anyMatch(cf ->
                         cf.getCampId().equals(campId)
-                        && cf.getFacilityId().equals(facilityId2));
+                                && cf.getFacilityId().equals(facilityId2));
     }
 
     @Test
