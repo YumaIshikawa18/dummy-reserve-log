@@ -20,7 +20,7 @@ dummy-reserve-log is a reservation management system for camping reservations. I
    
 2. **Build the project and start the containers:** 
    ```bash
-    ./mvnw clean package && docker compose down --volumes && docker compose up -d --build
+   ./mvnw clean package && docker compose down --volumes && docker compose up -d --build
    ```
    
 3. **API Request Example**
